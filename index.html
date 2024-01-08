@@ -1,0 +1,82 @@
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+<div>
+  <canvas id="myChart2"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  fetch('http://localhost:3000/chart',{
+    method: 'get'
+  })
+    .then(response => response.json())
+    .then(data => {
+      const ctx = document.getElementById('myChart');
+      const ctx2 = document.getElementById('myChart2');
+
+      const mrrData = {
+          labels: data.mrr.labels,
+          datasets: [
+            {
+              label: 'MRR (em dólares)',
+              data: data.mrr.data,
+              type: 'bar', // Define o tipo de gráfico como barras
+              yAxisID: 'y-axis-1', // Define o eixo Y primário
+              backgroundColor: 'blue',
+              backgroundColor: 'rgba(54, 162, 235, 0.6)', // Cor de preenchimento
+              borderColor: 'rgba(54, 162, 235, 1)', // Cor da borda
+              borderWidth: 1, // Largura da bord
+            }
+          ],
+        };
+      const mrrData2 = {
+          labels: data.churnRate.labels,
+          maintainAspectRatio: false,
+          datasets: [
+            {
+              label: 'Churn Rate (%)',
+              data: data.churnRate.data,
+              type: 'line', // Define o tipo de gráfico como linha
+              fill: false, // Não preenche a linha
+              borderColor: '#41167f', // Cor da linha do Churn Rate
+              borderWidth: 2, // Largura da linha do Churn Rate
+              yAxisID: 'y-axis-2', // Define o eixo Y secundário
+              pointBackgroundColor: '#fff', // Cor dos pontos
+              pointRadius: 5, // Define o eixo Y secundário,
+              tension: 0.3,
+              fill: true
+            },
+          ],
+        };
+      const config = {
+        responsive: true,
+        animation: {
+          duration: 3000,
+          easing: "easeInBounce",
+        },
+        type: 'bar',
+        data: mrrData,
+      };
+      const config2 = {
+        responsive: true,
+        maintainAspectRatio: false,
+        type: 'line',
+        options: {
+          animations: {
+            tension: {
+              duration: 1000,
+              easing: 'linear',
+              from: 0.1,
+              to: 0,
+              loop: true
+            }
+          }
+        },
+        data: mrrData2,
+      };
+      new Chart(ctx, config);
+      const myChart = new Chart(ctx2, config2);
+    })
+</script>
